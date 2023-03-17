@@ -167,7 +167,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxTime: 4
   pipe: {fileID: 4355889760740264049, guid: 5f2da5295a9f2534495ead49b2591a3e, type: 3}
-  height: 2.5
+  height: 2
 --- !u!4 &488003347
 Transform:
   m_ObjectHideFlags: 0
@@ -580,6 +580,22 @@ PrefabInstance:
     - target: {fileID: 4355889760740264055, guid: 5f2da5295a9f2534495ead49b2591a3e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4355889761420337976, guid: 5f2da5295a9f2534495ead49b2591a3e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 4355889761420337976, guid: 5f2da5295a9f2534495ead49b2591a3e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 11.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4355889762015975653, guid: 5f2da5295a9f2534495ead49b2591a3e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 4355889762015975653, guid: 5f2da5295a9f2534495ead49b2591a3e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -8.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f2da5295a9f2534495ead49b2591a3e, type: 3}
