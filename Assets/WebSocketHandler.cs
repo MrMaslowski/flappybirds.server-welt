@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 public class WebSocketHandler : MonoBehaviour
 {
-    WebSocket ws;
-    Spawner spawner = new Spawner();
+    private WebSocket ws;
+    public ObstacleSpawner spawner;
+
     // Start is called before the first frame update
     async Task Start()
     {
@@ -23,7 +24,17 @@ public class WebSocketHandler : MonoBehaviour
     public void sendObstacleDataToSpawner(string response)
     {
         Debug.Log(response);
-        spawner.getObstacleDataFromWebSocketHandler(Array.ConvertAll(response.replace('[','').replace(']','').Message.Split(new[] { ',', }, StringSplitOptions.RemoveEmptyEntries), Double.Parse));
+        string[] string_values = response.Substring(response.IndexOf('[') + 1).Split(']')[0].Split(',');
+        float[] values = new float[100];
+        int counter = 0;
+        foreach(string value in string_values)
+        {
+            if(!float.TryParse(value, out values[counter]))     //GEHT DAS ODER NICHT?
+                Debug.Log("Parsing obstacle data from string to float failed! Data: " + value);
+            Debug.Log("DER NEUE VALUE: " + values[counter]);
+            counter++;
+        }
+        spawner.setObstacleDataFromWebSocketHandler(values);
     }
 
     // Update is called once per frame
