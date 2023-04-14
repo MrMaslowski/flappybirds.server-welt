@@ -15,6 +15,7 @@ public class ObstacleMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Obstacles move from right to left. You can set their speed in Unity!
         transform.position += Vector3.left * speed * Time.deltaTime;
     }
 }

@@ -19,6 +19,7 @@ public class ObstacleSpawner : MonoBehaviour
     //load obstacle height data
     public void setObstacleDataFromWebSocketHandler(float[] data)
     {
+        //Set data!
         this.data = data;
     }
 
@@ -27,16 +28,20 @@ public class ObstacleSpawner : MonoBehaviour
     {
         if (timer > maxTime)
         {
+            //If data is null, dont spawn pipes, otherwise an error occurs
             if(data.Length == 0 || data == null)
             {
                 return;
             }
+            //If All pipes were spawned. Dont try to spawn new ones!
             if(obstacleCounter >= data.Length)
             {
                 return;
             }
             GameObject newpipe = Instantiate(pipe);
-            newpipe.transform.position = transform.position + new Vector3(0, (data[obstacleCounter] / 100.0f) * 4f - 2f, 0);           
+            //Pipe spawns at height from data/server
+            newpipe.transform.position = transform.position + new Vector3(0, (data[obstacleCounter] / 100.0f) * 4f - 2f, 0);   
+            //Destroy pipes after 26 sec!
             Destroy(newpipe, 26);
             timer = 0;
             obstacleCounter++;

@@ -11,12 +11,14 @@ public class bird_movement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Add rigibody to component
         rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        //If space button is pressed
         if (Input.GetMouseButtonDown(0))
         {
             //Jump
@@ -26,7 +28,7 @@ public class bird_movement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        //call gameover function in game manager
         gm.GameOver();
-
     }
 }

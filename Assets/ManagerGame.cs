@@ -16,6 +16,7 @@ public class ManagerGame : MonoBehaviour
 
     }
 
+    //End game --> Stop time
     public void GameOver()
     {
         Time.timeScale = 0;
