@@ -27,11 +27,17 @@ public class ObstacleSpawner : MonoBehaviour
     {
         if (timer > maxTime)
         {
-            Debug.Log("SPAWNED NEW PIPE!");
+            if(data.Length == 0 || data == null)
+            {
+                return;
+            }
+            if(obstacleCounter >= data.Length)
+            {
+                return;
+            }
             GameObject newpipe = Instantiate(pipe);
-            // First pipe spawns infinite times ? I dont know why
-            newpipe.transform.position = transform.position + new Vector3(0, (data[obstacleCounter] / 100.0f) * 2.5f, 0);           
-            Destroy(newpipe, 20);   //After 20 Seconds the pipe is destroyed --> Maybe 20sec isnt the most efficient value? --> Hasn't been tested yet
+            newpipe.transform.position = transform.position + new Vector3(0, (data[obstacleCounter] / 100.0f) * 4f - 2f, 0);           
+            Destroy(newpipe, 26);
             timer = 0;
             obstacleCounter++;
         }

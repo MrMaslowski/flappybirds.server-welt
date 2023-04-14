@@ -29,9 +29,8 @@ public class WebSocketHandler : MonoBehaviour
         int counter = 0;
         foreach(string value in string_values)
         {
-            if(!float.TryParse(value, out values[counter]))     //GEHT DAS ODER NICHT?
+            if(!float.TryParse(value, out values[counter]))
                 Debug.Log("Parsing obstacle data from string to float failed! Data: " + value);
-            Debug.Log("DER NEUE VALUE: " + values[counter]);
             counter++;
         }
         spawner.setObstacleDataFromWebSocketHandler(values);

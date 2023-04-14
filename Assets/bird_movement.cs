@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class bird_movement : MonoBehaviour
 {
-    public GameManager gm;
+    public ManagerGame gm;
     public float velocity = 1;
     private Rigidbody2D rb;
 
