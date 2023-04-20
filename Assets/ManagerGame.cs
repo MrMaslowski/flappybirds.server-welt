@@ -2,20 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObstacleMovement : MonoBehaviour
+public class ManagerGame : MonoBehaviour
 {
-    public float speed;
-
     // Start is called before the first frame update
     void Start()
     {
-
+        Time.timeScale = 1;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Obstacles move from right to left. You can set their speed in Unity!
-        transform.position += Vector3.left * speed * Time.deltaTime;
+
+    }
+
+    //End game --> Stop time
+    public void GameOver()
+    {
+        Time.timeScale = 0;
     }
 }
