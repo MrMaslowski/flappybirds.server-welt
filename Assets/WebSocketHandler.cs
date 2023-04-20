@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using WebSocketSharp;
-using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using WebSocket = WebSocketSharp.WebSocket;
 
 public class WebSocketHandler : MonoBehaviour
 {
@@ -17,29 +16,21 @@ public class WebSocketHandler : MonoBehaviour
         ws = new WebSocket("ws://116.203.41.47/");
         ws.Connect();
         //Retrieve data for pipes
-        ws.OnMessage += (sender, e) =>
+        Task.Run(() =>
         {
-            sendObstacleDataToSpawner(e.Data);
-        };
+            ws.OnMessage += (sender, e) =>
+            {
+                HandleRequest(e.Data);
+            };
+        });
     }
 
-    public void sendObstacleDataToSpawner(string response)
+    public void sendObstacleDataToSpawner(float[] pipes)
     {
-        //Parse pipes data from server
-        string[] string_values = response.Substring(response.IndexOf('[') + 1).Split(']')[0].Split(',');
-        float[] values = new float[100];
-        int counter = 0;
-        foreach(string value in string_values)
-        {
-            //Write to console if parsing failed
-            if(!float.TryParse(value, out values[counter]))
-                Debug.Log("Parsing obstacle data from string to float failed! Data: " + value);
-            counter++;
-        }
         //Set data in ObstacleSpawner
-        spawner.setObstacleDataFromWebSocketHandler(values);
+        spawner.setObstacleDataFromWebSocketHandler(pipes);
     }
-
+ 
     // Update is called once per frame
     void Update()
     {
@@ -51,6 +42,34 @@ public class WebSocketHandler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             ws.Send("Hallo Ozan du geile Sau!");
+        }
+    }
+
+    public void HandleRequest(string request)
+    {
+        Metadata data = MetadataMapper.JsonToMetadata(request);
+        switch (data.RequestType)
+        {
+            case RequestType.Pipes:
+                var pipes = (data.Value as JObject)?["MapPipes"]!.ToObject<float[]>();
+                sendObstacleDataToSpawner(pipes);
+                break;
+            case RequestType.Name:
+                break;
+            case RequestType.NameSet:
+                break;
+            case RequestType.JumpPlayer:
+                break;
+            case RequestType.JumpOther:
+                break;
+            case RequestType.DeathPlayer:
+                break;
+            case RequestType.DeathOther:
+                break;
+            case RequestType.AllPlayerData:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 }
