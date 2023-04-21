@@ -1,13 +1,17 @@
 using System;
+using System.Net.WebSockets;
+using System.Threading;
 using UnityEngine;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WebSocket = WebSocketSharp.WebSocket;
+using static MetadataMapper;
 
 public class WebSocketHandler : MonoBehaviour
 {
     private WebSocket ws;
     public ObstacleSpawner spawner;
+    private String name;
 
     // Start is called before the first frame update
     async Task Start()
@@ -25,12 +29,6 @@ public class WebSocketHandler : MonoBehaviour
         });
     }
 
-    public void sendObstacleDataToSpawner(float[] pipes)
-    {
-        //Set data in ObstacleSpawner
-        spawner.setObstacleDataFromWebSocketHandler(pipes);
-    }
- 
     // Update is called once per frame
     void Update()
     {
@@ -45,14 +43,24 @@ public class WebSocketHandler : MonoBehaviour
         }
     }
 
-    public void HandleRequest(string request)
+    public void Send(Metadata metadata)
     {
-        Metadata data = MetadataMapper.JsonToMetadata(request);
+        ws.Send(EncodeJson(MetadataToJson(metadata)));
+    }
+
+    public void HandleRequest(string response)
+    {
+        //Map the responseData to a Metadata  Object containing Type, From and Values
+        Metadata data = MetadataMapper.JsonToMetadata(response);
+        //Perform different Action based on RequestType
         switch (data.RequestType)
         {
             case RequestType.Pipes:
+                //We Have received Pipe information
+                //Map the values to a float[]
                 var pipes = (data.Value as JObject)?["MapPipes"]!.ToObject<float[]>();
-                sendObstacleDataToSpawner(pipes);
+                //Set Data in ObstactleSpawner
+                spawner.setObstacleDataFromWebSocketHandler(pipes);
                 break;
             case RequestType.Name:
                 break;
