@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 public class WebSocketHandler : MonoBehaviour
 {
     private WebSocket ws;
+    private PlayerSpawn ps;
     public ObstacleSpawner spawner;
 
     // Start is called before the first frame update
@@ -16,6 +17,11 @@ public class WebSocketHandler : MonoBehaviour
         //Connect to Websocket
         ws = new WebSocket("ws://116.203.41.47/");
         ws.Connect();
+        ////Retrieve all data
+        //ws.Send(ws.OnMessage += (sender, e) =>
+        //{
+        //    sendObstacleDataToSpawner(e.Data);
+        //});
         //Retrieve data for pipes
         ws.OnMessage += (sender, e) =>
         {
@@ -52,5 +58,11 @@ public class WebSocketHandler : MonoBehaviour
         {
             ws.Send("Hallo Ozan du geile Sau!");
         }
+    }
+    void Datahandler(string response)
+    {
+        // response string in gewünschte Variablen parsen
+        // player spawnen
+        
     }
 }
