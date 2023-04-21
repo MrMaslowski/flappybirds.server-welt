@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
 using UnityEngine;
@@ -64,9 +65,9 @@ public class WebSocketHandler : MonoBehaviour
             case RequestType.Pipes:
                 //We Have received Pipe information
                 //Map the values to a float[]
-                var pipes = (data.Value as JObject)?["MapPipes"]!.ToObject<float[]>();
+                var pipes = (data.Value as JObject).ToObject<Pipes>();
                 //Set Data in ObstactleSpawner
-                spawner.setObstacleDataFromWebSocketHandler(pipes);
+                spawner.setObstacleDataFromWebSocketHandler(pipes.MapPipes.Select(d => (float)d).ToArray());
                 break;
             case RequestType.Name:
                 break;
