@@ -40,7 +40,7 @@ public class ObstacleSpawner : MonoBehaviour
             }
             GameObject newpipe = Instantiate(pipe);
             //Pipe spawns at height from data/server
-            newpipe.transform.position = transform.position + new Vector3(0, (data[obstacleCounter] / 100.0f) * 4f - 2f, 0);   
+            newpipe.transform.position = transform.position + new Vector3(0, (data[obstacleCounter]) * 4f - 2f, 0);   
             //Destroy pipes after 26 sec!
             Destroy(newpipe, 26);
             timer = 0;
