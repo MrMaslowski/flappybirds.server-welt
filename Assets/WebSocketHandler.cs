@@ -10,6 +10,7 @@ using static MetadataMapper;
 public class WebSocketHandler : MonoBehaviour
 {
     private WebSocket ws;
+    private PlayerSpawn ps;
     public ObstacleSpawner spawner;
     private String name;
 
@@ -19,6 +20,11 @@ public class WebSocketHandler : MonoBehaviour
         //Connect to Websocket
         ws = new WebSocket("ws://116.203.41.47/");
         ws.Connect();
+        ////Retrieve all data
+        //ws.Send(ws.OnMessage += (sender, e) =>
+        //{
+        //    sendObstacleDataToSpawner(e.Data);
+        //});
         //Retrieve data for pipes
         Task.Run(() =>
         {
