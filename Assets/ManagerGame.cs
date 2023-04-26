@@ -5,14 +5,11 @@ using UnityEngine;
 
 public class ManagerGame : MonoBehaviour
 {
-    public ObstacleSpawner os;
-    // Start is called before the first frame update
     // Start is called before the first frame update
     void Start()
     {
         Time.timeScale = 1;
         StartSocket();
-        WebSocketHandler.os = os;
         // Use the webSocketController as needed
         if (WebSocketHandler.webSocket == null)
         {

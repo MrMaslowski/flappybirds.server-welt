@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ObstacleSpawner : MonoBehaviour
@@ -13,7 +11,7 @@ public class ObstacleSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameObject newpipe = Instantiate(pipe);
+        WebSocketHandler.os = this;
     }
 
     //load obstacle height data
@@ -40,7 +38,7 @@ public class ObstacleSpawner : MonoBehaviour
             }
             GameObject newpipe = Instantiate(pipe);
             //Pipe spawns at height from data/server
-            newpipe.transform.position = transform.position + new Vector3(0, (data[obstacleCounter]) * 4f - 2f, 0);   
+            newpipe.transform.position = transform.position + new Vector3(23, (data[obstacleCounter]) * 4f - 2f, 0);   
             //Destroy pipes after 26 sec!
             Destroy(newpipe, 26);
             timer = 0;

@@ -61,6 +61,7 @@ public class WebSocketHandler : MonoBehaviour
     {
         //Map the responseData to a Metadata  Object containing Type, From and Values
         Metadata data = MetadataMapper.JsonToMetadata(response);
+        Debug.Log("Message received type: " + data.RequestType);
         //Perform different Action based on RequestType
         switch (data.RequestType)
         {
@@ -72,11 +73,10 @@ public class WebSocketHandler : MonoBehaviour
                 os.setObstacleDataFromWebSocketHandler(pipes.MapPipes.Select(d => (float)d).ToArray());
                 break;
             case RequestType.Name:
-                name = (string)data.Value;
-                Debug.Log("Name: " + data.Value);
+                Send(new Metadata(RequestType.Name, name, name));
                 break;
             case RequestType.NameSet:
-                Debug.Log("NameSet: " + data.Value);
+                name = (string)data.Value;
                 break;
             case RequestType.JumpPlayer:
                 Debug.Log("JumpPlayer: " + data.Value);

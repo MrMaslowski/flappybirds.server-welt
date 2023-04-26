@@ -26,7 +26,6 @@ public class MenuController : MonoBehaviour
 
     public void StartGame()
     {
-        Debug.Log("test");
         SceneManager.LoadScene("SampleScene");
     }
 
@@ -42,7 +41,6 @@ public class MenuController : MonoBehaviour
         inputFieldImage.fillCenter = true;
         
         GameObject webSocketObject = GameObject.Find("WebSocket");
-        Debug.Log(webSocketObject);
     }
 
     public void OnTextInputChanged(string newValue)
