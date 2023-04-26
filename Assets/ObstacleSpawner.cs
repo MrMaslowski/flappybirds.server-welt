@@ -8,7 +8,7 @@ public class ObstacleSpawner : MonoBehaviour
     private float timer = 0;
     public GameObject pipe;
     private int obstacleCounter = 0;
-    private float[] data;
+    public float[] data;
 
     // Start is called before the first frame update
     void Start()
