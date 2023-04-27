@@ -13,14 +13,19 @@ public class WebSocketHandler : MonoBehaviour
     public static PlayerSpawn ps;
     public static ObstacleSpawner os;
     public static String name;
+    public static int Score = 0;
 
     public static void Connect()
     {
         // Set up WebSocket connection
         webSocket = new WebSocket("ws://116.203.41.47/");
+        //Action for OpenedConnection
         webSocket.OnOpen += OnWebSocketOpen;
+        //Action for ReceivedMessage
         webSocket.OnMessage += OnWebSocketMessage;
+        //Action for Error
         webSocket.OnError += OnWebSocketError;
+        //Action for ClosedConnection
         webSocket.OnClose += OnWebSocketClose;
 
         // Connect to the WebSocket server
@@ -29,31 +34,31 @@ public class WebSocketHandler : MonoBehaviour
 
     public static void OnWebSocketOpen(object sender, System.EventArgs e)
     {
+        //Action on Open
         Debug.Log("WebSocket connection opened.");
     }
 
     public static void OnWebSocketMessage(object sender, MessageEventArgs e)
     {
+        //Handle the received Data
         HandleRequest(e.Data);
     }
 
     public static void OnWebSocketError(object sender, ErrorEventArgs e)
     {
+        //Action on Error
         Debug.LogError("WebSocket error: " + e.Message);
     }
 
     public static void OnWebSocketClose(object sender, CloseEventArgs e)
     {
+        //Action on Close
         Debug.Log("WebSocket connection closed with code " + e.Code + " and reason '" + e.Reason + "'.");
-    }
-
-    public void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
     }
 
     public static void Send(Metadata metadata)
     {
+        //Send a Metadata Object to the Server
         webSocket.Send(EncodeJson(MetadataToJson(metadata)));
     }
 
@@ -61,7 +66,6 @@ public class WebSocketHandler : MonoBehaviour
     {
         //Map the responseData to a Metadata  Object containing Type, From and Values
         Metadata data = MetadataMapper.JsonToMetadata(response);
-        Debug.Log("Message received type: " + data.RequestType);
         //Perform different Action based on RequestType
         switch (data.RequestType)
         {
@@ -73,9 +77,11 @@ public class WebSocketHandler : MonoBehaviour
                 os.setObstacleDataFromWebSocketHandler(pipes.MapPipes.Select(d => (float)d).ToArray());
                 break;
             case RequestType.Name:
+                //Server Requests the Users Name
                 Send(new Metadata(RequestType.Name, name, name));
                 break;
             case RequestType.NameSet:
+                //The Name has been accepted, so we can save it
                 name = (string)data.Value;
                 break;
             case RequestType.JumpPlayer:
