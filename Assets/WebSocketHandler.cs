@@ -11,7 +11,7 @@ using static MetadataMapper;
 public class WebSocketHandler : MonoBehaviour
 {
     private WebSocket ws;
-    private PlayerSpawn ps;
+    public PlayerSpawn ps;
     public ObstacleSpawner spawner;
     private String name;
 
@@ -82,6 +82,8 @@ public class WebSocketHandler : MonoBehaviour
             case RequestType.DeathOther:
                 break;
             case RequestType.AllPlayerData:
+                var playerlist = (data.Value as JObject).ToObject<List<Player>>();
+                ps.spawnPlayer(playerlist);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
