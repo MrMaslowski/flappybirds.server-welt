@@ -93,6 +93,10 @@ public class WebSocketHandler : MonoBehaviour
             case RequestType.AllPlayerData:
                 Debug.Log("AllPayerData: " + data.Value);
                 break;
+            case RequestType.Score:
+                break;
+            case RequestType.Highscore:
+                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
