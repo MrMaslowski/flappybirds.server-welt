@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using WebSocket = WebSocketSharp.WebSocket;
 using static MetadataMapper;
+using System.Collections.Generic;
 
 public class WebSocketHandler : MonoBehaviour
 {
@@ -57,7 +58,7 @@ public class WebSocketHandler : MonoBehaviour
 
     public void HandleRequest(string response)
     {
-        //Map the responseData to a Metadata  Object containing Type, From and Values
+        //Map the responseData to a Metadata Object containing Type, From and Values
         Metadata data = MetadataMapper.JsonToMetadata(response);
         //Perform different Action based on RequestType
         switch (data.RequestType)
@@ -76,12 +77,16 @@ public class WebSocketHandler : MonoBehaviour
             case RequestType.JumpPlayer:
                 break;
             case RequestType.JumpOther:
+                // Bekommt spielernamen, dieses Spielerobjekt suchen und jumpfunktion ausführen
                 break;
             case RequestType.DeathPlayer:
                 break;
             case RequestType.DeathOther:
+                var playername = data.Value as string;
+                ps.deletePlayer(playername);
                 break;
             case RequestType.AllPlayerData:
+                Debug.Log("Test1");
                 var playerlist = (data.Value as JObject).ToObject<List<Player>>();
                 ps.spawnPlayer(playerlist);
                 break;
