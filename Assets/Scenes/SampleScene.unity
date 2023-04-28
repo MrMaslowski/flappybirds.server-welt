@@ -279,7 +279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39b98740b993a24bb33c5b52b5cd644, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ps: {fileID: 0}
+  ps: {fileID: 406390996}
   spawner: {fileID: 1060776658}
 --- !u!114 &402652620
 MonoBehaviour:

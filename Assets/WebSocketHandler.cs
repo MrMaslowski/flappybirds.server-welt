@@ -44,11 +44,6 @@ public class WebSocketHandler : MonoBehaviour
         {
             return;
         }
-        //If space is pressed, send ozan a nice comment about his sexy body
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ws.Send("Hallo Ozan du geile Sau!");
-        }
     }
 
     public void Send(Metadata metadata)
@@ -69,6 +64,7 @@ public class WebSocketHandler : MonoBehaviour
                 var pipes = (data.Value as JObject).ToObject<Pipes>();
                 //Set Data in ObstactleSpawner
                 spawner.setObstacleDataFromWebSocketHandler(pipes.MapPipes.Select(d => (float)d).ToArray());
+                Send(new Metadata(RequestType.AllPlayerData, "string", "string"));
                 break;
             case RequestType.Name:
                 break;
@@ -86,9 +82,10 @@ public class WebSocketHandler : MonoBehaviour
                 ps.deletePlayer(playername);
                 break;
             case RequestType.AllPlayerData:
-                Debug.Log("Test1");
-                var playerlist = (data.Value as JObject).ToObject<List<Player>>();
+                List<Player> playerlist = data.Value as List<Player>;
+                Debug.Log("Playerlist: " + data.Value);
                 ps.spawnPlayer(playerlist);
+                Debug.Log("Test444");
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

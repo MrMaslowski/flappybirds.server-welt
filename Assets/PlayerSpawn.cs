@@ -12,7 +12,7 @@ public class PlayerSpawn : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -25,9 +25,16 @@ public class PlayerSpawn : MonoBehaviour
     public void spawnPlayer(List<Player> playerlist)
     {
 
+        Debug.Log("Test5");
         // prüfen welche neu sind -> hinzufügen
+        if(playerlist == null ||playerlist.Count < 1)
+        {
+            Debug.Log("Test55");
+            return;
+        }
         foreach (Player player in playerlist)
         {
+            Debug.Log("Test4");
             if (player != null)
             {
                 // find Player in Array
@@ -51,10 +58,11 @@ public class PlayerSpawn : MonoBehaviour
                     newplayer.GetComponent<Renderer>() .material.color = col;
                     // addnewplayer to local list
                     players.Add(player.Name, newplayer);
-                    Debug.Log("Test2");
+                    Debug.Log("Test5");
                 }
             }
         }
+        Debug.Log("Test7");
     }
     public void deletePlayer(string player)
     {
