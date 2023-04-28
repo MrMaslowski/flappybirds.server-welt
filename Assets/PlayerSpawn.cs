@@ -12,7 +12,7 @@ public class PlayerSpawn : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        WebSocketHandler.ps = this;
     }
 
     // Update is called once per frame
@@ -26,7 +26,7 @@ public class PlayerSpawn : MonoBehaviour
     {
 
         Debug.Log("Test5");
-        // prüfen welche neu sind -> hinzufügen
+        // prï¿½fen welche neu sind -> hinzufï¿½gen
         if(playerlist == null ||playerlist.Count < 1)
         {
             Debug.Log("Test55");
@@ -66,7 +66,7 @@ public class PlayerSpawn : MonoBehaviour
     }
     public void deletePlayer(string player)
     {
-        // prüfen welche Tod sind -> despawnen
+        // prï¿½fen welche Tod sind -> despawnen
         if (players.ContainsKey(player))
         {
             //despawn Player
