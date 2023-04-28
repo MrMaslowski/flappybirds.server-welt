@@ -75,6 +75,7 @@ public class WebSocketHandler : MonoBehaviour
                 var pipes = (data.Value as JObject)?.ToObject<Pipes>();
                 //Set Data in ObstactleSpawner
                 os.setObstacleDataFromWebSocketHandler(pipes.MapPipes.Select(d => (float)d).ToArray());
+                Send(new Metadata(RequestType.AllPlayerData, "",""));
                 break;
             case RequestType.Name:
                 //Server Requests the Users Name
@@ -97,7 +98,6 @@ public class WebSocketHandler : MonoBehaviour
                 Debug.Log("DeathOther: " + data.Value);
                 break;
             case RequestType.AllPlayerData:
-                Debug.Log("AllPayerData: " + data.Value);
                 break;
             case RequestType.Score:
                 break;
