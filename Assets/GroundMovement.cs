@@ -23,7 +23,7 @@ public class GroundMovement : MonoBehaviour
         // noch nicht smoothe genug
         // wie kann ich genau sagen wann es raus ist?? Framewidth/2 - position.x + objectwidth/2 <= 0!
 
-        if(GetComponent<SpriteRenderer>().bounds.size.x <= -transform.position.x )
+        if(GetComponent<SpriteRenderer>().bounds.size.x <= -transform.position.x + 0.1)
         {
             // move to the right again
             transform.position = new Vector3(-transform.position.x, transform.position.y, 0);

@@ -1,61 +1,68 @@
 using System;
 using System.Linq;
-using System.Net.WebSockets;
-using System.Threading;
 using UnityEngine;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using WebSocketSharp;
 using WebSocket = WebSocketSharp.WebSocket;
 using static MetadataMapper;
 
 public class WebSocketHandler : MonoBehaviour
 {
-    private WebSocket ws;
-    private PlayerSpawn ps;
-    public ObstacleSpawner spawner;
-    private String name;
+    public static WebSocket webSocket;
+    public static PlayerSpawn ps;
+    public static ObstacleSpawner os;
+    public static String name;
+    public static int Score = 0;
 
-    // Start is called before the first frame update
-    async Task Start()
+    public static void Connect()
     {
-        //Connect to Websocket
-        ws = new WebSocket("ws://116.203.41.47/");
-        ws.Connect();
-        ////Retrieve all data
-        //ws.Send(ws.OnMessage += (sender, e) =>
-        //{
-        //    sendObstacleDataToSpawner(e.Data);
-        //});
-        //Retrieve data for pipes
-        Task.Run(() =>
-        {
-            ws.OnMessage += (sender, e) =>
-            {
-                HandleRequest(e.Data);
-            };
-        });
+        // Set up WebSocket connection
+        webSocket = new WebSocket("ws://116.203.41.47/");
+        //Action for OpenedConnection
+        webSocket.OnOpen += OnWebSocketOpen;
+        //Action for ReceivedMessage
+        webSocket.OnMessage += OnWebSocketMessage;
+        //Action for Error
+        webSocket.OnError += OnWebSocketError;
+        //Action for ClosedConnection
+        webSocket.OnClose += OnWebSocketClose;
+
+        // Connect to the WebSocket server
+        webSocket.Connect();
     }
 
-    // Update is called once per frame
-    void Update()
+    public static void OnWebSocketOpen(object sender, System.EventArgs e)
     {
-        if (ws == null)
-        {
-            return;
-        }
-        //If space is pressed, send ozan a nice comment about his sexy body
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ws.Send("Hallo Ozan du geile Sau!");
-        }
+        //Action on Open
+        Debug.Log("WebSocket connection opened.");
     }
 
-    public void Send(Metadata metadata)
+    public static void OnWebSocketMessage(object sender, MessageEventArgs e)
     {
-        ws.Send(EncodeJson(MetadataToJson(metadata)));
+        //Handle the received Data
+        HandleRequest(e.Data);
     }
 
-    public void HandleRequest(string response)
+    public static void OnWebSocketError(object sender, ErrorEventArgs e)
+    {
+        //Action on Error
+        Debug.LogError("WebSocket error: " + e.Message);
+    }
+
+    public static void OnWebSocketClose(object sender, CloseEventArgs e)
+    {
+        //Action on Close
+        Debug.Log("WebSocket connection closed with code " + e.Code + " and reason '" + e.Reason + "'.");
+    }
+
+    public static void Send(Metadata metadata)
+    {
+        //Send a Metadata Object to the Server
+        webSocket.Send(EncodeJson(MetadataToJson(metadata)));
+    }
+
+    public static void HandleRequest(string response)
     {
         //Map the responseData to a Metadata  Object containing Type, From and Values
         Metadata data = MetadataMapper.JsonToMetadata(response);
@@ -65,23 +72,36 @@ public class WebSocketHandler : MonoBehaviour
             case RequestType.Pipes:
                 //We Have received Pipe information
                 //Map the values to a float[]
-                var pipes = (data.Value as JObject).ToObject<Pipes>();
+                var pipes = (data.Value as JObject)?.ToObject<Pipes>();
                 //Set Data in ObstactleSpawner
-                spawner.setObstacleDataFromWebSocketHandler(pipes.MapPipes.Select(d => (float)d).ToArray());
+                os.setObstacleDataFromWebSocketHandler(pipes.MapPipes.Select(d => (float)d).ToArray());
+                Send(new Metadata(RequestType.AllPlayerData, "",""));
                 break;
             case RequestType.Name:
+                //Server Requests the Users Name
+                Send(new Metadata(RequestType.Name, name, name));
                 break;
             case RequestType.NameSet:
+                //The Name has been accepted, so we can save it
+                name = (string)data.Value;
                 break;
             case RequestType.JumpPlayer:
+                Debug.Log("JumpPlayer: " + data.Value);
                 break;
             case RequestType.JumpOther:
+                Debug.Log("JumpOther: " + data.Value);
                 break;
             case RequestType.DeathPlayer:
+                Debug.Log("DeathPlayer: " + data.Value);
                 break;
             case RequestType.DeathOther:
+                Debug.Log("DeathOther: " + data.Value);
                 break;
             case RequestType.AllPlayerData:
+                break;
+            case RequestType.Score:
+                break;
+            case RequestType.Highscore:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
