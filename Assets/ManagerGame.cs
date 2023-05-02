@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class ManagerGame : MonoBehaviour
@@ -9,21 +6,7 @@ public class ManagerGame : MonoBehaviour
     void Start()
     {
         Time.timeScale = 1;
-        StartSocket();
-        // Use the webSocketController as needed
-        if (WebSocketHandler.webSocket == null)
-        {
-            WebSocketHandler.Connect();
-        }
-    }
-
-    private void StartSocket()
-    {
-        // Use the webSocketController as needed
-        if (WebSocketHandler.webSocket == null)
-        { 
-            WebSocketHandler.Connect();
-        }
+        
         WebSocketHandler.Send(new Metadata(RequestType.Pipes, WebSocketHandler.name, ""));
     }
 
