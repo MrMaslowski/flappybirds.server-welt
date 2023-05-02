@@ -1,13 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ObstacleMovement : MonoBehaviour
 {
     public float speed;
     public GameObject player;
     private bool passed;
+    public TextMeshProUGUI scoreText;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +25,7 @@ public class ObstacleMovement : MonoBehaviour
         {
             //Increase the Score inGame
             WebSocketHandler.Score++;
+            scoreText.text = WebSocketHandler.Score.ToString();
             //Send a Request to the Server, that an obstacle has been passed so the Score should be increased
             WebSocketHandler.Send(new Metadata(RequestType.Score, WebSocketHandler.name, ""));
             //Score has been Set, so we no longer need to check 

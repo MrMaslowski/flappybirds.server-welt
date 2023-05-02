@@ -1,12 +1,15 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ManagerGame : MonoBehaviour
 {
+    public Button restartButton;
+    
     // Start is called before the first frame update
     void Start()
     {
         Time.timeScale = 1;
-        
+        restartButton.gameObject.SetActive(false);
         WebSocketHandler.Send(new Metadata(RequestType.Pipes, WebSocketHandler.name, ""));
     }
 
@@ -19,6 +22,8 @@ public class ManagerGame : MonoBehaviour
     //End game --> Stop time
     public void GameOver()
     {
+        restartButton.gameObject.SetActive(true);
+        WebSocketHandler.Send(new Metadata(RequestType.DeathPlayer, WebSocketHandler.name, ""));
         Time.timeScale = 0;
     }
 }
