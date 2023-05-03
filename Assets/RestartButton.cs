@@ -8,6 +8,7 @@ namespace DefaultNamespace
         public void OnRestartButtonClicked()
         {
             WebSocketHandler.Send(new Metadata(RequestType.Restart, WebSocketHandler.name, ""));
+            WebSocketHandler.Score = 0;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
