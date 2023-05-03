@@ -7,7 +7,7 @@ public class PlayerSpawn : MonoBehaviour
 {
     //private float timer = 0;
     public GameObject bird;
-    private Dictionary<string, GameObject> players;
+    private Dictionary<string, GameObject> players = new Dictionary<string, GameObject>();
 
     // Start is called before the first frame update
     void Start()
@@ -20,29 +20,30 @@ public class PlayerSpawn : MonoBehaviour
     {
         
     }
+    public  GameObject getOnlinePlayer(string playername) 
+    { 
+        return players[playername]; 
+    }
+
     // receives Player data and calculates if and where other Players are in the frame
     // playerlist: player in 8 sec radius, 
     public void spawnPlayer(List<Player> playerlist)
     {
-
-        Debug.Log("Test5");
         // pr�fen welche neu sind -> hinzuf�gen
-        if(playerlist == null ||playerlist.Count < 1)
+        if(playerlist == null || playerlist.Count < 1)
         {
-            Debug.Log("Test55");
+            Debug.Log("Playerlist leer");
             return;
         }
         foreach (Player player in playerlist)
         {
-            Debug.Log("Test4");
             if (player != null)
             {
                 // find Player in Array
                 if(!players.ContainsKey(player.Name))
                 {
                     // spawn Player
-
-                    GameObject newplayer = Instantiate(bird);
+                    GameObject newplayer = Instantiate(bird); // bricht schleifeniteration ab. Ursache finden!!
 
                     // x-Value = Played time * speed 
                     //var played_time = (player.Playtime - player.Playtime).TotalSeconds; // falsch
@@ -58,20 +59,20 @@ public class PlayerSpawn : MonoBehaviour
                     newplayer.GetComponent<Renderer>() .material.color = col;
                     // addnewplayer to local list
                     players.Add(player.Name, newplayer);
-                    Debug.Log("Test5");
                 }
             }
         }
-        Debug.Log("Test7");
+        Debug.Log("Alle Spieler der Liste durchgearbeitet");
     }
-    public void deletePlayer(string player)
+    public void deletePlayer(string playername)
     {
         // pr�fen welche Tod sind -> despawnen
-        if (players.ContainsKey(player))
+        if (players.ContainsKey(playername))
         {
             //despawn Player
+            Destroy(players[playername]);
             //delete from List
-            players.Remove(player);
+            players.Remove(playername);
         }
     }
     private static float ToFloat(double value)

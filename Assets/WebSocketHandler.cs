@@ -75,7 +75,7 @@ public class WebSocketHandler : MonoBehaviour
                 var pipes = (data.Value as JObject)?.ToObject<Pipes>();
                 //Set Data in ObstactleSpawner
                 os.setObstacleDataFromWebSocketHandler(pipes.MapPipes.Select(d => (float)d).ToArray());
-                Send(new Metadata(RequestType.AllPlayerData, "",""));
+                Send(new Metadata(RequestType.AllPlayerData, "","")); // was macht des?
                 break;
             case RequestType.Name:
                 //Server Requests the Users Name
@@ -91,19 +91,26 @@ public class WebSocketHandler : MonoBehaviour
             case RequestType.JumpOther:
                 Debug.Log("JumpOther: " + data.Value);
                 // Bekommt spielernamen, dieses Spielerobjekt suchen und jumpfunktion ausf�hren
+                // Muss ich anfrage senden oder kommt des einfach so?
+                var playername = data.Value as string;
+                var player = ps.getOnlinePlayer(playername);
+                OnlinePlayer_Movement opm = player.GetComponent<OnlinePlayer_Movement>();
+                opm.Jump();
                 break;
             case RequestType.DeathPlayer:
                 Debug.Log("DeathPlayer: " + data.Value);
+                Send(new Metadata(RequestType.DeathPlayer, "", "")); // was will ozan hier für Daten?
                 break;
             case RequestType.DeathOther:
-                var playername = data.Value as string;
+                playername = data.Value as string;
                 ps.deletePlayer(playername);
                 break;
             case RequestType.AllPlayerData:
                 List<Player> playerlist = (data.Value as JArray)
                     .ToObject<JToken[]>()
                     .Select(j => j.ToObject<Player>())
-                    .ToList();;
+                    .ToList();
+                Debug.Log("AllPlayerData: " + playerlist);
                 ps.spawnPlayer(playerlist);
                 break;
             case RequestType.Score:
