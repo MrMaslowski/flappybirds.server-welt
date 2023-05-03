@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
-using WebSocket = WebSocketSharp.WebSocket;
+using NativeWebSocket;
 using static MetadataMapper;
 using System.Collections.Generic;
 using WebSocketSharp;
