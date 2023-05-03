@@ -12,22 +12,11 @@ public class MenuController : MonoBehaviour
 
     public void Start()
     {
-        StartSocket();
-    }
-
-    private void StartSocket()
-    {
-        // Use the webSocketController as needed
-        if (WebSocketHandler.webSocket == null)
-        {
-            WebSocketHandler.Connect();
-        }
     }
 
     public void StartGame()
     {
         SceneManager.LoadScene("SampleScene");
-
     }
 
     public void ChangeBoarderColor() 

@@ -15,51 +15,59 @@ public class WebSocketHandler : MonoBehaviour
     public static String name;
     public static int Score = 0;
 
-    public static void Connect()
+    // Start is called before the first frame update
+    async void Start()
     {
-        // Set up WebSocket connection
-        webSocket = new WebSocket("ws://116.203.41.47/");
-        //Action for OpenedConnection
-        webSocket.OnOpen += OnWebSocketOpen;
-        //Action for ReceivedMessage
-        webSocket.OnMessage += OnWebSocketMessage;
-        //Action for Error
-        webSocket.OnError += OnWebSocketError;
-        //Action for ClosedConnection
-        webSocket.OnClose += OnWebSocketClose;
+        webSocket = new WebSocket("ws://116.203.41.47");
 
-        // Connect to the WebSocket server
-        webSocket.Connect();
+        webSocket.OnOpen += () =>
+        {
+            Debug.Log("Connection open!");
+        };
+
+        webSocket.OnError += (e) =>
+        {
+            Debug.Log("Error! " + e);
+        };
+
+        webSocket.OnClose += (e) =>
+        {
+            Debug.Log("Connection closed!");
+        };
+
+        webSocket.OnMessage += (bytes) =>
+        {
+            var message = System.Text.Encoding.UTF8.GetString(bytes);
+            HandleRequest(message);
+        };
+
+        // waiting for messages
+        await webSocket.Connect();
     }
 
-    public static void OnWebSocketOpen(object sender, System.EventArgs e)
+    void Update()
     {
-        //Action on Open
-        Debug.Log("WebSocket connection opened.");
+        #if !UNITY_WEBGL || UNITY_EDITOR
+            webSocket.DispatchMessageQueue();
+        #endif
+    }
+    
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+    
+
+    private async void OnApplicationQuit()
+    {
+        await webSocket.Close();
     }
 
-    public static void OnWebSocketMessage(object sender, MessageEventArgs e)
-    {
-        //Handle the received Data
-        HandleRequest(e.Data);
-    }
 
-    public static void OnWebSocketError(object sender, ErrorEventArgs e)
-    {
-        //Action on Error
-        Debug.LogError("WebSocket error: " + e.Message);
-    }
-
-    public static void OnWebSocketClose(object sender, CloseEventArgs e)
-    {
-        //Action on Close
-        Debug.Log("WebSocket connection closed with code " + e.Code + " and reason '" + e.Reason + "'.");
-    }
-
-    public static void Send(Metadata metadata)
+    public static async void Send(Metadata metadata)
     {
         //Send a Metadata Object to the Server
-        webSocket.Send(EncodeJson(MetadataToJson(metadata)));
+        await webSocket.Send(EncodeJson(MetadataToJson(metadata)));
     }
 
     public static void HandleRequest(string response)
