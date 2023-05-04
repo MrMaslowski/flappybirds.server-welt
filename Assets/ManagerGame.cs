@@ -1,29 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ManagerGame : MonoBehaviour
 {
+    public Button restartButton;
+    
     // Start is called before the first frame update
     void Start()
     {
         Time.timeScale = 1;
-        StartSocket();
-        // Use the webSocketController as needed
-        if (WebSocketHandler.webSocket == null)
-        {
-            WebSocketHandler.Connect();
-        }
-    }
-
-    private void StartSocket()
-    {
-        // Use the webSocketController as needed
-        if (WebSocketHandler.webSocket == null)
-        { 
-            WebSocketHandler.Connect();
-        }
+        restartButton.gameObject.SetActive(false);
         WebSocketHandler.Send(new Metadata(RequestType.Pipes, WebSocketHandler.name, ""));
     }
 
@@ -36,6 +22,8 @@ public class ManagerGame : MonoBehaviour
     //End game --> Stop time
     public void GameOver()
     {
+        restartButton.gameObject.SetActive(true);
+        WebSocketHandler.Send(new Metadata(RequestType.DeathPlayer, WebSocketHandler.name, ""));
         Time.timeScale = 0;
     }
 }

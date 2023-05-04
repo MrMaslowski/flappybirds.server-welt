@@ -1,12 +1,11 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using WebSocket = WebSocketSharp.WebSocket;
-//using NativeWebSocket; // für webiste einbindung?!
+using NativeWebSocket;
 using static MetadataMapper;
 using System.Collections.Generic;
-using WebSocketSharp;
 
 public class WebSocketHandler : MonoBehaviour
 {
@@ -16,51 +15,59 @@ public class WebSocketHandler : MonoBehaviour
     public static String name;
     public static int Score = 0;
 
-    public static void Connect()
+    // Start is called before the first frame update
+    async void Start()
     {
-        // Set up WebSocket connection
-        webSocket = new WebSocket("ws://116.203.41.47/");
-        //Action for OpenedConnection
-        webSocket.OnOpen += OnWebSocketOpen;
-        //Action for ReceivedMessage
-        webSocket.OnMessage += OnWebSocketMessage;
-        //Action for Error
-        webSocket.OnError += OnWebSocketError;
-        //Action for ClosedConnection
-        webSocket.OnClose += OnWebSocketClose;
+        webSocket = new WebSocket("ws://116.203.41.47:5000");
 
-        // Connect to the WebSocket server
-        webSocket.Connect();
+        webSocket.OnOpen += () =>
+        {
+            Debug.Log("Connection open!");
+        };
+
+        webSocket.OnError += (e) =>
+        {
+            Debug.Log("Error! " + e);
+        };
+
+        webSocket.OnClose += (e) =>
+        {
+            Debug.Log("Connection closed!");
+        };
+
+        webSocket.OnMessage += (bytes) =>
+        {
+            var message = System.Text.Encoding.UTF8.GetString(bytes);
+            HandleRequest(message);
+        };
+
+        // waiting for messages
+        await webSocket.Connect();
     }
 
-    public static void OnWebSocketOpen(object sender, System.EventArgs e)
+    void Update()
     {
-        //Action on Open
-        Debug.Log("WebSocket connection opened.");
+        #if !UNITY_WEBGL || UNITY_EDITOR
+            webSocket.DispatchMessageQueue();
+        #endif
+    }
+    
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+    
+
+    private async void OnApplicationQuit()
+    {
+        await webSocket.Close();
     }
 
-    public static void OnWebSocketMessage(object sender, MessageEventArgs e)
-    {
-        //Handle the received Data
-        HandleRequest(e.Data);
-    }
 
-    public static void OnWebSocketError(object sender, ErrorEventArgs e)
-    {
-        //Action on Error
-        Debug.LogError("WebSocket error: " + e.Message);
-    }
-
-    public static void OnWebSocketClose(object sender, CloseEventArgs e)
-    {
-        //Action on Close
-        Debug.Log("WebSocket connection closed with code " + e.Code + " and reason '" + e.Reason + "'.");
-    }
-
-    public static void Send(Metadata metadata)
+    public static async void Send(Metadata metadata)
     {
         //Send a Metadata Object to the Server
-        webSocket.Send(EncodeJson(MetadataToJson(metadata)));
+        await webSocket.Send(EncodeJson(MetadataToJson(metadata)));
     }
 
     public static void HandleRequest(string response)
@@ -89,21 +96,24 @@ public class WebSocketHandler : MonoBehaviour
             case RequestType.JumpPlayer:
                 Debug.Log("JumpPlayer: " + data.Value);
                 break;
-            case RequestType.JumpOther:
+            //case RequestType.JumpOther:
+            //    Debug.Log("JumpOther: " + data.Value);
+            //    // Bekommt spielernamen, dieses Spielerobjekt suchen und jumpfunktion ausf�hren
+            //    // Muss ich anfrage senden oder kommt des einfach so?
+            //    var playername = data.Value as string;
+            //    var player = ps.getOnlinePlayer(playername);
+            //    OnlinePlayer_Movement opm = player.GetComponent<OnlinePlayer_Movement>();
+            //    opm.Jump();
+            //    break;
+            case RequestType.JumpOther: // wird jeden Frame ausgeführt
                 Debug.Log("JumpOther: " + data.Value);
-                // Bekommt spielernamen, dieses Spielerobjekt suchen und jumpfunktion ausf�hren
-                // Muss ich anfrage senden oder kommt des einfach so?
-                var playername = data.Value as string;
-                var player = ps.getOnlinePlayer(playername);
-                OnlinePlayer_Movement opm = player.GetComponent<OnlinePlayer_Movement>();
-                opm.Jump();
-                break;
-            case RequestType.DeathPlayer:
-                Debug.Log("DeathPlayer: " + data.Value);
-                Send(new Metadata(RequestType.DeathPlayer, "", "")); // was will ozan hier für Daten?
+                var playerHeight = (float)data.Value;
+                var playerName = ps.getOnlinePlayer(data.From);
+                OnlinePlayer_Movement opm = playerName.GetComponent<OnlinePlayer_Movement>();
+                opm.transform.position = new Vector3(opm.transform.position.x, playerHeight, 0);
                 break;
             case RequestType.DeathOther:
-                playername = data.Value as string;
+                var playername = data.Value as string;
                 ps.deletePlayer(playername);
                 break;
             case RequestType.AllPlayerData:
