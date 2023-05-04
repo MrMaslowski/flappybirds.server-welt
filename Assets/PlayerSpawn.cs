@@ -43,12 +43,11 @@ public class PlayerSpawn : MonoBehaviour
                 if(!players.ContainsKey(player.Name))
                 {
                     // spawn Player
-                    GameObject newplayer = Instantiate(bird); // bricht schleifeniteration ab. Ursache finden!!
+                    GameObject newplayer = Instantiate(bird);
 
-                    // x-Value = Played time * speed 
-                    //var played_time = (player.Playtime - player.Playtime).TotalSeconds; // falsch
-                    //float x_value = ((float)(played_time) - Time.realtimeSinceStartup);
-                    float x_value = -1; // Test
+                    // x-Value = Played time * speed => OnPlTime - Mytime
+                    float x_value = (float)(player.Playtime.Subtract(DateTime.Now.AddSeconds(Time.realtimeSinceStartup)).TotalSeconds); // checken ob 
+                    Debug.Log(x_value);
 
                     // Bird spawns at height from data/server
                     newplayer.transform.position = new Vector3(x_value, ToFloat(player.Height), 0);

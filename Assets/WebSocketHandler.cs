@@ -2,7 +2,8 @@ using System;
 using System.Linq;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
-using NativeWebSocket;
+using WebSocket = WebSocketSharp.WebSocket;
+//using NativeWebSocket; // für webiste einbindung?!
 using static MetadataMapper;
 using System.Collections.Generic;
 using WebSocketSharp;
