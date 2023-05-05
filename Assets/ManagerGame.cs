@@ -12,6 +12,7 @@ public class ManagerGame : MonoBehaviour
         Time.timeScale = 1;
         restartButton.gameObject.SetActive(false);
         WebSocketHandler.Send(new Metadata(RequestType.Pipes, WebSocketHandler.name, ""));
+        WebSocketHandler.Send(new Metadata(RequestType.Highscore, WebSocketHandler.name, ""));
         sb.SetActive(true);
     }
 

@@ -6,12 +6,16 @@ using TMPro;
 public class ScoreBoard : MonoBehaviour
 {
     public TMP_InputField highScoreField;
-    private int HighScoreData;
 
-    public void setHighScoreData(int data, string name)
+    public void setHighScoreData(List<Score> myScores)
     {
-        HighScoreData = data;
-        highScoreField.text = "Highscore[" + name + "]: " + HighScoreData;
+        highScoreField.text = "";
+        int i = 1;
+        foreach(var score in myScores)
+        {
+            highScoreField.text += i + ". " + score.Name + ": " + score.Value + "\n";
+            i++;
+        }
     }
 
 
