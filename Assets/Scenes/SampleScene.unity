@@ -561,7 +561,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   restartButton: {fileID: 20245139}
-  Scoreboard: {fileID: 1357347542}
+  sb: {fileID: 1357347542}
 --- !u!1 &406390995
 GameObject:
   m_ObjectHideFlags: 0
