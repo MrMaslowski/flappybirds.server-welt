@@ -6,12 +6,14 @@ using Newtonsoft.Json.Linq;
 using NativeWebSocket;
 using static MetadataMapper;
 using System.Collections.Generic;
+using TMPro;
 
 public class WebSocketHandler : MonoBehaviour
 {
     public static WebSocket webSocket;
     public static PlayerSpawn ps;
     public static ObstacleSpawner os;
+    public static ScoreBoard sb;
     public static String name;
     public static int Score = 0;
 
@@ -127,6 +129,10 @@ public class WebSocketHandler : MonoBehaviour
             case RequestType.Score:
                 break;
             case RequestType.Highscore:
+                Debug.Log("HighScore: " + data.Value);
+                string lol = data.Value.ToString();
+
+                sb.setHighScoreData(int.Parse(lol));
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
