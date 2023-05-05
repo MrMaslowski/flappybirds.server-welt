@@ -12,7 +12,7 @@ public class WebSocketHandler : MonoBehaviour
     public static WebSocket webSocket;
     public static PlayerSpawn ps;
     public static ObstacleSpawner os;
-    public static String name;
+    public static String name = "";
     public static int Score = 0;
 
     // Start is called before the first frame update
@@ -47,7 +47,7 @@ public class WebSocketHandler : MonoBehaviour
 
     void Update()
     {
-        #if !UNITY_WEBGL || UNITY_EDITOR
+        #if (!UNITY_WEBGL || UNITY_EDITOR)
             webSocket.DispatchMessageQueue();
         #endif
     }
@@ -73,7 +73,7 @@ public class WebSocketHandler : MonoBehaviour
     public static void HandleRequest(string response)
     {
         //Map the responseData to a Metadata Object containing Type, From and Values
-        Metadata data = MetadataMapper.JsonToMetadata(response);
+        Metadata data = JsonToMetadata(response);
         //Perform different Action based on RequestType
         switch (data.RequestType)
         {
@@ -82,8 +82,11 @@ public class WebSocketHandler : MonoBehaviour
                 //Map the values to a float[]
                 var pipes = (data.Value as JObject)?.ToObject<Pipes>();
                 //Set Data in ObstactleSpawner
-                os.setObstacleDataFromWebSocketHandler(pipes.MapPipes.Select(d => (float)d).ToArray());
-                Send(new Metadata(RequestType.AllPlayerData, "","")); // was macht des?
+                if (os != null)
+                {
+                    os.setObstacleDataFromWebSocketHandler(pipes.MapPipes.Select(d => (float)d).ToArray());
+                }
+                //Send(new Metadata(RequestType.AllPlayerData, "","")); // was macht des?
                 break;
             case RequestType.Name:
                 //Server Requests the Users Name
@@ -122,7 +125,10 @@ public class WebSocketHandler : MonoBehaviour
                     .Select(j => j.ToObject<Player>())
                     .ToList();
                 Debug.Log("AllPlayerData: " + playerlist);
-                ps.spawnPlayer(playerlist);
+                if (ps != null)
+                {
+                    ps.spawnPlayer(playerlist);
+                }
                 break;
             case RequestType.Score:
                 break;
