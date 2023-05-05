@@ -8,10 +8,10 @@ public class ScoreBoard : MonoBehaviour
     public TMP_InputField highScoreField;
     private int HighScoreData;
 
-    public void setHighScoreData(int data)
+    public void setHighScoreData(int data, string name)
     {
         HighScoreData = data;
-        highScoreField.text = "Highscore: " + HighScoreData;
+        highScoreField.text = "Highscore[" + name + "]: " + HighScoreData;
     }
 
 

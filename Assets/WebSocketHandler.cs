@@ -129,10 +129,11 @@ public class WebSocketHandler : MonoBehaviour
             case RequestType.Score:
                 break;
             case RequestType.Highscore:
-                Debug.Log("HighScore: " + data.Value);
-                string lol = data.Value.ToString();
+                Debug.Log("HighScore [" + data.From +  "]: " + data.Value);
 
-                sb.setHighScoreData(int.Parse(lol));
+
+                string lol = data.Value.ToString();
+                sb.setHighScoreData(int.Parse(lol), data.From);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
