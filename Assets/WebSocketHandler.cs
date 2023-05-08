@@ -6,7 +6,6 @@ using Newtonsoft.Json.Linq;
 using NativeWebSocket;
 using static MetadataMapper;
 using System.Collections.Generic;
-using TMPro;
 
 public class WebSocketHandler : MonoBehaviour
 {
@@ -14,7 +13,7 @@ public class WebSocketHandler : MonoBehaviour
     public static PlayerSpawn ps;
     public static ObstacleSpawner os;
     public static ScoreBoard sb;
-    public static String name;
+    public static String name = "";
     public static int Score = 0;
 
     // Start is called before the first frame update
@@ -75,7 +74,7 @@ public class WebSocketHandler : MonoBehaviour
     public static void HandleRequest(string response)
     {
         //Map the responseData to a Metadata Object containing Type, From and Values
-        Metadata data = MetadataMapper.JsonToMetadata(response);
+        Metadata data = JsonToMetadata(response);
         //Perform different Action based on RequestType
         switch (data.RequestType)
         {
@@ -84,8 +83,11 @@ public class WebSocketHandler : MonoBehaviour
                 //Map the values to a float[]
                 var pipes = (data.Value as JObject)?.ToObject<Pipes>();
                 //Set Data in ObstactleSpawner
-                os.setObstacleDataFromWebSocketHandler(pipes.MapPipes.Select(d => (float)d).ToArray());
-                Send(new Metadata(RequestType.AllPlayerData, "","")); // was macht des?
+                if (os != null)
+                {
+                    os.setObstacleDataFromWebSocketHandler(pipes.MapPipes.Select(d => (float)d).ToArray());
+                }
+                //Send(new Metadata(RequestType.AllPlayerData, "","")); // was macht des?
                 break;
             case RequestType.Name:
                 //Server Requests the Users Name
@@ -124,13 +126,14 @@ public class WebSocketHandler : MonoBehaviour
                     .Select(j => j.ToObject<Player>())
                     .ToList();
                 Debug.Log("AllPlayerData: " + playerlist);
-                ps.spawnPlayer(playerlist);
+                if (ps != null)
+                {
+                    ps.spawnPlayer(playerlist);
+                }
                 break;
             case RequestType.Score:
                 break;
             case RequestType.Highscore:
-                Debug.Log("Highscore");
-                Debug.Log(data.Value);
                 var score = (data.Value as JArray)?.ToObject<JToken[]>()
                     .Select(j => j.ToObject<Score>())
                     .ToList();

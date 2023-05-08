@@ -8,11 +8,13 @@ public class PlayerSpawn : MonoBehaviour
     //private float timer = 0;
     public GameObject bird;
     private Dictionary<string, GameObject> players = new Dictionary<string, GameObject>();
+    public static float startTime;
 
     // Start is called before the first frame update
     void Start()
     {
         WebSocketHandler.ps = this;
+        startTime = Time.realtimeSinceStartup;
     }
 
     // Update is called once per frame
@@ -45,8 +47,10 @@ public class PlayerSpawn : MonoBehaviour
                     // spawn Player
                     GameObject newplayer = Instantiate(bird);
 
+                    // calculate played time since restart
+                    float elapsedTime = Time.realtimeSinceStartup - startTime;
                     // x-Value = Played time * speed => OnPlTime - Mytime
-                    float x_value = (float)(player.Playtime.Subtract(DateTime.Now.AddSeconds(Time.realtimeSinceStartup)).TotalSeconds); // checken ob 
+                    float x_value = (float)player.Playtime.Subtract(DateTime.Now.AddSeconds(elapsedTime)).TotalSeconds; 
                     Debug.Log(x_value);
 
                     // Bird spawns at height from data/server

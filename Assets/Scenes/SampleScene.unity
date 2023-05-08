@@ -991,8 +991,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14
-  m_fontSizeBase: 14
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1457,7 +1457,7 @@ MonoBehaviour:
   m_HideSoftKeyboard: 0
   m_CharacterValidation: 0
   m_RegexValue: 
-  m_GlobalPointSize: 14
+  m_GlobalPointSize: 18
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
@@ -2166,11 +2166,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7048295066070019533, guid: 5f2da5295a9f2534495ead49b2591a3e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 22
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 7048295066070019533, guid: 5f2da5295a9f2534495ead49b2591a3e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.34183693
+      value: 0.34183675
       objectReference: {fileID: 0}
     - target: {fileID: 7048295066070019533, guid: 5f2da5295a9f2534495ead49b2591a3e, type: 3}
       propertyPath: m_LocalPosition.z
