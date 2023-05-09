@@ -18,8 +18,8 @@ public class bird_movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //If left mouse button is pressed
-        if (Input.GetMouseButtonDown(0))
+        //If left mouse button is pressed (or spacebar)
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
         {
             Jump();
         }
