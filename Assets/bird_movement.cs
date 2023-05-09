@@ -9,7 +9,7 @@ public class bird_movement : MonoBehaviour
     public float velocity = 1;
     private Rigidbody2D rb;
     public GameObject progressBar;
-    AudioSource audioData;
+    public AudioSource audioData;
     private double PlayerHealth = 1;
 
     // Start is called before the first frame update
@@ -28,7 +28,7 @@ public class bird_movement : MonoBehaviour
         {
             Jump();
         }
-        //WebSocketHandler.Send(new Metadata(RequestType.JumpPlayer, WebSocketHandler.name, transform.position.y));
+        WebSocketHandler.Send(new Metadata(RequestType.JumpPlayer, WebSocketHandler.name, transform.position.y));
     }
 
     public void Jump()
