@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class bird_movement : MonoBehaviour
 {
     public ManagerGame gm;
     public float velocity = 1;
     private Rigidbody2D rb;
+    public GameObject progressBar;
     AudioSource audioData;
+    private double PlayerHealth = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +44,12 @@ public class bird_movement : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("OUCH");
+        PlayerHealth -= 0.1;
+        progressBar.GetComponent<Image>().fillAmount = (float)PlayerHealth;
+        if(PlayerHealth <= 0)
+        {
+            gm.GameOver();
+        }
         audioData.Play();
     }
 }
