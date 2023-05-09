@@ -19,7 +19,7 @@ public class WebSocketHandler : MonoBehaviour
     // Start is called before the first frame update
     async void Start()
     {
-        webSocket = new WebSocket("ws://116.203.41.47:5000");
+        webSocket = new WebSocket("wss://flappybirds.server-welt.com/");
 
         webSocket.OnOpen += () =>
         {
