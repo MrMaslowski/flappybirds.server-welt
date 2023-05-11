@@ -12,13 +12,14 @@ public class WebSocketHandler : MonoBehaviour
     public static WebSocket webSocket;
     public static PlayerSpawn ps;
     public static ObstacleSpawner os;
+    public static ScoreBoard sb;
     public static String name = "";
     public static int Score = 0;
 
     // Start is called before the first frame update
     async void Start()
     {
-        webSocket = new WebSocket("ws://116.203.41.47:5000");
+        webSocket = new WebSocket("wss://flappybirds.server-welt.com/");
 
         webSocket.OnOpen += () =>
         {
@@ -47,7 +48,7 @@ public class WebSocketHandler : MonoBehaviour
 
     void Update()
     {
-        #if (!UNITY_WEBGL || UNITY_EDITOR)
+        #if !UNITY_WEBGL || UNITY_EDITOR
             webSocket.DispatchMessageQueue();
         #endif
     }
@@ -133,6 +134,10 @@ public class WebSocketHandler : MonoBehaviour
             case RequestType.Score:
                 break;
             case RequestType.Highscore:
+                var score = (data.Value as JArray)?.ToObject<JToken[]>()
+                    .Select(j => j.ToObject<Score>())
+                    .ToList();
+                sb.setHighScoreData(score);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
