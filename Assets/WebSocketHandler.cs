@@ -87,7 +87,7 @@ public class WebSocketHandler : MonoBehaviour
                 {
                     os.setObstacleDataFromWebSocketHandler(pipes.MapPipes.Select(d => (float)d).ToArray());
                 }
-                //Send(new Metadata(RequestType.AllPlayerData, "","")); // was macht des?
+                Send(new Metadata(RequestType.AllPlayerData, "","")); // sendet request
                 break;
             case RequestType.Name:
                 //Server Requests the Users Name
@@ -111,14 +111,21 @@ public class WebSocketHandler : MonoBehaviour
             //    break;
             case RequestType.JumpOther: // wird jeden Frame ausgeführt
                 Debug.Log("JumpOther: " + data.Value);
-                var playerHeight = (float)data.Value;
-                var playerName = ps.getOnlinePlayer(data.From);
-                OnlinePlayer_Movement opm = playerName.GetComponent<OnlinePlayer_Movement>();
-                opm.transform.position = new Vector3(opm.transform.position.x, playerHeight, 0);
+                var playerHeight = (double)data.Value;
+                if (ps != null && ps.isPlayerOnline(data.From))
+                {
+                    var playerName = ps.getOnlinePlayer(data.From);
+                    OnlinePlayer_Movement opm = playerName.GetComponent<OnlinePlayer_Movement>();
+                    opm.transform.position = new Vector3(opm.transform.position.x, (float)playerHeight, 0);
+                }
+                
                 break;
             case RequestType.DeathOther:
-                var playername = data.Value as string;
-                ps.deletePlayer(playername);
+                if(ps != null)
+                {
+                    var playername = data.Value as string;
+                    ps.deletePlayer(playername);
+                }
                 break;
             case RequestType.AllPlayerData:
                 List<Player> playerlist = (data.Value as JArray)
@@ -138,6 +145,7 @@ public class WebSocketHandler : MonoBehaviour
                     .Select(j => j.ToObject<Score>())
                     .ToList();
                 sb.setHighScoreData(score);
+                //ps.spawnPlayer(score.Select(s => s.Name));
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

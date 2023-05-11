@@ -37,6 +37,8 @@ public class MenuController : MonoBehaviour
     {
         Debug.Log("New text input value: " + newValue);
         WebSocketHandler.Send(new Metadata(RequestType.Name, newValue, newValue));
+
+        PlayerSpawn.startTime = Time.realtimeSinceStartup;
     }
 
     // Update is called once per frame

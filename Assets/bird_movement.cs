@@ -28,6 +28,7 @@ public class bird_movement : MonoBehaviour
         {
             Jump();
         }
+        Debug.Log("Eigene Position: " + transform.position.y);
         WebSocketHandler.Send(new Metadata(RequestType.JumpPlayer, WebSocketHandler.name, transform.position.y));
     }
 
