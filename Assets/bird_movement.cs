@@ -28,7 +28,7 @@ public class bird_movement : MonoBehaviour
         {
             Jump();
         }
-        Debug.Log("Eigene Position: " + transform.position.y);
+        // constantly sent y-Position to server
         WebSocketHandler.Send(new Metadata(RequestType.JumpPlayer, WebSocketHandler.name, transform.position.y));
     }
 
@@ -44,7 +44,6 @@ public class bird_movement : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("OUCH");
         PlayerHealth -= 0.1;
         progressBar.GetComponent<Image>().fillAmount = (float)PlayerHealth;
         if(PlayerHealth <= 0)

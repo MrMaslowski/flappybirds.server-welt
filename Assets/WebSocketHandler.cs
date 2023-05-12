@@ -100,17 +100,8 @@ public class WebSocketHandler : MonoBehaviour
             case RequestType.JumpPlayer:
                 Debug.Log("JumpPlayer: " + data.Value);
                 break;
-            //case RequestType.JumpOther:
-            //    Debug.Log("JumpOther: " + data.Value);
-            //    // Bekommt spielernamen, dieses Spielerobjekt suchen und jumpfunktion ausf�hren
-            //    // Muss ich anfrage senden oder kommt des einfach so?
-            //    var playername = data.Value as string;
-            //    var player = ps.getOnlinePlayer(playername);
-            //    OnlinePlayer_Movement opm = player.GetComponent<OnlinePlayer_Movement>();
-            //    opm.Jump();
-            //    break;
-            case RequestType.JumpOther: // wird jeden Frame ausgeführt
-                Debug.Log("JumpOther: " + data.Value);
+            case RequestType.JumpOther: // gets called every frame
+                // find onlineplayer in dictionary and update it's y-position
                 var playerHeight = (double)data.Value;
                 if (ps != null && ps.isPlayerOnline(data.From))
                 {
@@ -121,6 +112,7 @@ public class WebSocketHandler : MonoBehaviour
                 
                 break;
             case RequestType.DeathOther:
+                // despawn dead onlineplayers
                 if(ps != null)
                 {
                     var playername = data.Value as string;
@@ -128,11 +120,11 @@ public class WebSocketHandler : MonoBehaviour
                 }
                 break;
             case RequestType.AllPlayerData:
+                // get all playerdata for spawning all playing players
                 List<Player> playerlist = (data.Value as JArray)
                     .ToObject<JToken[]>()
                     .Select(j => j.ToObject<Player>())
                     .ToList();
-                Debug.Log("AllPlayerData: " + playerlist);
                 if (ps != null)
                 {
                     ps.spawnPlayer(playerlist);
@@ -141,14 +133,23 @@ public class WebSocketHandler : MonoBehaviour
             case RequestType.Score:
                 break;
             case RequestType.Highscore:
+                // update scoredata when changes are known
                 var score = (data.Value as JArray)?.ToObject<JToken[]>()
                     .Select(j => j.ToObject<Score>())
                     .ToList();
-                sb.setHighScoreData(score);
-                //ps.spawnPlayer(score.Select(s => s.Name));
+                if(sb != null)
+                    sb.setHighScoreData(score);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
+        }
+    }
+    public static void clearPlayers()
+    {
+        // delete player dictionary/onlineplayer
+        if (ps != null)
+        {
+            ps.deleteAll();
         }
     }
 }

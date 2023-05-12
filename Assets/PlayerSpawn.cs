@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class PlayerSpawn : MonoBehaviour
 {
-    // private float timer = 0;
     public GameObject bird;
     private Dictionary<string, GameObject> players = new Dictionary<string, GameObject>();
     public static float startTime;
@@ -21,6 +20,10 @@ public class PlayerSpawn : MonoBehaviour
     void Update()
     {
         
+    }
+    public void deleteAll()
+    {
+        players.Clear();
     }
     public  GameObject getOnlinePlayer(string playername) 
     { 
@@ -52,13 +55,9 @@ public class PlayerSpawn : MonoBehaviour
 
                     // calculate played time since restart
                     float elapsedTime = Time.realtimeSinceStartup - startTime;
+
                     // x-Value = Played time * speed => OnPlTime - Mytime
-                    float x_value = (float)player.Playtime.Subtract(DateTime.Now.AddSeconds(elapsedTime)).TotalSeconds; 
-                    if(player.Playtime > DateTime.Now.AddSeconds(elapsedTime))
-                    {
-                        x_value = x_value * (-1);
-                    }
-                    Debug.Log("Xwert newplayer: " + x_value);
+                    float x_value = -(float)player.Playtime.Subtract(DateTime.Now.AddSeconds(-elapsedTime)).TotalSeconds;
 
                     // Bird spawns at height from data/server
                     newplayer.transform.position = new Vector3(x_value, ToFloat(player.Height), 0);
