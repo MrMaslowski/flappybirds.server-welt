@@ -30,6 +30,7 @@ public class bird_movement : MonoBehaviour
         }
         // constantly sent y-Position to server
         WebSocketHandler.Send(new Metadata(RequestType.JumpPlayer, WebSocketHandler.name, transform.position.y));
+        WebSocketHandler.Send(new Metadata(RequestType.Highscore, WebSocketHandler.name, ""));
     }
 
     public void Jump()
