@@ -13,15 +13,21 @@ public class MenuController : MonoBehaviour
     public void Start()
     {
     }
-
+    // Star button
     public void StartGame()
     {
+        // Load Playing Scene 
         SceneManager.LoadScene("SampleScene");
+
+        // Played time zurücksetzten
+        PlayerSpawn.startTime = Time.realtimeSinceStartup;
+        WebSocketHandler.Send(new Metadata(RequestType.Restart, WebSocketHandler.name, ""));
     }
 
     public void ChangeBoarderColor() 
     {
         Color color = Color.red;
+
         // Get the input field's background image component
         Image inputFieldImage = inputField.image;
 
@@ -35,7 +41,6 @@ public class MenuController : MonoBehaviour
 
     public void OnTextInputChanged(string newValue)
     {
-        Debug.Log("New text input value: " + newValue);
         WebSocketHandler.Send(new Metadata(RequestType.Name, newValue, newValue));
     }
 

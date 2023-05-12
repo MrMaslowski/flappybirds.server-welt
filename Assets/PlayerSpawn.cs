@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class PlayerSpawn : MonoBehaviour
 {
-    //private float timer = 0;
     public GameObject bird;
     private Dictionary<string, GameObject> players = new Dictionary<string, GameObject>();
     public static float startTime;
@@ -22,9 +21,17 @@ public class PlayerSpawn : MonoBehaviour
     {
         
     }
+    public void deleteAll()
+    {
+        players.Clear();
+    }
     public  GameObject getOnlinePlayer(string playername) 
     { 
         return players[playername]; 
+    }
+    public bool isPlayerOnline(string playername)
+    {
+        return players.ContainsKey(playername);
     }
 
     // receives Player data and calculates if and where other Players are in the frame
@@ -34,7 +41,6 @@ public class PlayerSpawn : MonoBehaviour
         // pr�fen welche neu sind -> hinzuf�gen
         if(playerlist == null || playerlist.Count < 1)
         {
-            Debug.Log("Playerlist leer");
             return;
         }
         foreach (Player player in playerlist)
@@ -49,9 +55,9 @@ public class PlayerSpawn : MonoBehaviour
 
                     // calculate played time since restart
                     float elapsedTime = Time.realtimeSinceStartup - startTime;
+
                     // x-Value = Played time * speed => OnPlTime - Mytime
-                    float x_value = (float)player.Playtime.Subtract(DateTime.Now.AddSeconds(elapsedTime)).TotalSeconds; 
-                    Debug.Log(x_value);
+                    float x_value = -(float)player.Playtime.Subtract(DateTime.Now.AddSeconds(-elapsedTime)).TotalSeconds;
 
                     // Bird spawns at height from data/server
                     newplayer.transform.position = new Vector3(x_value, ToFloat(player.Height), 0);
@@ -65,7 +71,6 @@ public class PlayerSpawn : MonoBehaviour
                 }
             }
         }
-        Debug.Log("Alle Spieler der Liste durchgearbeitet");
     }
     public void deletePlayer(string playername)
     {
