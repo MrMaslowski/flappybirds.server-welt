@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using NativeWebSocket;
 using static MetadataMapper;
 using System.Collections.Generic;
+using TMPro;
 
 public class WebSocketHandler : MonoBehaviour
 {
@@ -108,6 +109,7 @@ public class WebSocketHandler : MonoBehaviour
                     var playerName = ps.getOnlinePlayer(data.From);
                     OnlinePlayer_Movement opm = playerName.GetComponent<OnlinePlayer_Movement>();
                     opm.transform.position = new Vector3(opm.transform.position.x, (float)playerHeight, 0);
+                    opm.transform.GetChild(0).gameObject.GetComponent<TMP_Text>().text = data.From;
                 }
                 
                 break;

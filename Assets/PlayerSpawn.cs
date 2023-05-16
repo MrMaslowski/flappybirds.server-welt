@@ -2,12 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerSpawn : MonoBehaviour
 {
     public GameObject bird;
     private Dictionary<string, GameObject> players = new Dictionary<string, GameObject>();
     public static float startTime;
+    // A variable that stores the name of the remote player
+    public TMP_Text text;
 
     // Start is called before the first frame update
     void Start()
@@ -52,6 +55,9 @@ public class PlayerSpawn : MonoBehaviour
                 {
                     // spawn Player
                     GameObject newplayer = Instantiate(bird);
+                    Debug.Log("SPAWN: " +  player.Name);
+                    // Also set the name of the bird
+                    text.text = player.Name;
 
                     // calculate played time since restart
                     float elapsedTime = Time.realtimeSinceStartup - startTime;
